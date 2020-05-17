@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<link rel="stylesheet" type="text/css" href="mesh.css">
+</head>
+
+<body>
+
+	<canvas id="canvas" width="700" height="700"> </canvas>
+
+	<link href="https://fonts.googleapis.com/css2?family=Jost&display=swap" rel="stylesheet">
+
+	<div class="controls"> 
+
+		<p> stiffness (k) </p>
+		<input type="range" id="stiffnessrange" onchange="setStiffness()"/>
+		<p class="label" id="stiffnesslabel"> 0.4 </p>
+
+		<p> damping (lambda) </p>
+		<input type="range" id="dampingrange" onchange="setDamping()"/>
+		<p class="label" id="dampinglabel"> 1 </p>
+
+		<p> point seperation </p>
+		<input type="range" id="seperationrange" onchange="setSeperation()"/>
+		<p class="label" id="seperationlabel"> 12 </p>
+
+		<p> grid width </p>
+		<input type="range" id="widthrange" onchange="setWidth()"/>
+		<p class="label" id="widthlabel"> 40 </p>
+
+		<p> grid height </p>
+		<input type="range" id="heightrange" onchange="setHeight()"/>
+		<p class="label" id="heightlabel"> 40 </p>
+
+		<p> click strength </p>
+		<input type="range" id="strengthrange" onchange="setStrength()"/>
+		<p class="label" id="strengthlabel"> 20 </p>
+
+	</div>
+
+	<script src="mesh.js" type="text/javascript"> </script>
+
+</body>
+
+</html>
