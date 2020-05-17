@@ -2,26 +2,35 @@ html {
 	margin:0;
 	padding:0;
 	font-family: "Jost", sans-serif;
+	display: grid;
+	justify-content: center;
+	width: 100%;
 }
 
 body {
 	margin:0; 
 	padding:0; 
 	display: grid; 
+	justify-self: center;
 	justify-content: center; 
-	align-content: center; 
-	width: 100%; 
+	align-content: center;
+	width: 50%;
 	margin-bottom: 10em;
 }
 
 canvas {
+	justify-self: center;
 	margin:0;
 	padding:0;
+	width: 50vw;
+	height: 50vw;
+	max-width: 60em;
+	max-height: 60em;
 }
 
 .controls {
 	display: grid;
-	grid-template-columns: 25% 65% 10%;
+	grid-template-columns: 10em 1fr 4em;
 }
 
 input {

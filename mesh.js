@@ -259,8 +259,8 @@ function mouseDown(e) {
 	if(e.button == 0 && e.target == canvas) {
 		for(var t=0; t<n; ++t) {
 
-			var dx = e.offsetX - d * (t%nx-nx/2) - w/2;
-			var dy = e.offsetY - d * (Math.floor(t/nx)-ny/2) - h/2;
+			var dx = e.offsetX / canvas.offsetWidth * w - d * (t%nx-nx/2) - w/2;
+			var dy = e.offsetY / canvas.offsetHeight * h - d * (Math.floor(t/nx)-ny/2) - h/2;
 			var dm = Math.sqrt(dx*dx + dy*dy) + 0.0001;
 
 			var f  = strength/(0.0001*dm*dm + 1);
@@ -271,7 +271,17 @@ function mouseDown(e) {
 	}
 }
 
+function resize() {
+
+    w = parseInt(Math.max(document.documentElement.clientWidth, window.innerWidth)); // get screen width of canvas in px
+
+    // set canvas width to its screen width
+    canvas.width  = w;
+    canvas.height = w;
+}
+
 window.addEventListener('mousedown', mouseDown);
+//window.addEventListener('resize', resize);
 
 function step() {
 
@@ -322,8 +332,8 @@ function animate() {
 }
 
 var canvas  = document.getElementById("canvas");
-var w       = canvas.offsetWidth;
-var h       = canvas.offsetHeight;
+var w       = canvas.width;//canvas.offsetWidth;
+var h       = canvas.height;//canvas.offsetHeight;
 var ctx     = canvas.getContext("2d");
 
 var canvasData = ctx.getImageData(0, 0, w, h);
