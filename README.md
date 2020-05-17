@@ -5,4 +5,4 @@ simulation of a mesh obeying
 
 including a performant sparse matrix class
 
-https://jsfiddle.net/OscarSaharoy/qmep5njs/
+https://codepen.io/oscarsaharoy/pen/YzyJmVq
