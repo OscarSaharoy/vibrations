@@ -1,5 +1,7 @@
 class Matrix {
 
+	// dense matrix class
+
 	constructor(rows, cols) {
 		this.rows   = rows;
 		this.cols   = cols;
@@ -9,6 +11,8 @@ class Matrix {
 }
 
 class SparseMatrix {
+
+	// sparse matrix class
 
 	constructor(rows, cols) {
 		this.rows   = rows;
@@ -22,6 +26,8 @@ class SparseMatrix {
 
 	setvalue(row, col, value) {
 
+		// pushes a value into the matrix at row, col
+
 		this.values.push(value);
 		this.index.push(row*this.cols + col);
 		this.r_ind.push(row);
@@ -29,6 +35,8 @@ class SparseMatrix {
 	}
 
 	scale(S) {
+
+		// multiplies each element by S
 
 		for(var t=0; t<this.values.length; ++t) {
 
@@ -95,6 +103,8 @@ function mul(M1, S) {
 	return temp;
 }
 
+// ui variables
+
 var stiffnessrange  = document.getElementById("stiffnessrange");
 var dampingrange    = document.getElementById("dampingrange");
 var seperationrange = document.getElementById("seperationrange");
@@ -108,6 +118,8 @@ var seperationlabel = document.getElementById("seperationlabel");
 var widthlabel      = document.getElementById("widthlabel");
 var heightlabel     = document.getElementById("heightlabel");
 var strengthlabel   = document.getElementById("strengthlabel");
+
+// functions to set parameters depending on sliders
 
 function setStiffness() {
 
@@ -170,18 +182,20 @@ function setStrength() {
 
 function init() {
 
-	// create matrices
-	x2 = new Matrix(n, 1);
-	x1 = new Matrix(n, 1);
-	x  = new Matrix(n, 1);
+	// create position and derivative vectors
+	x2 = new Matrix(n, 1); // x acceleration
+	x1 = new Matrix(n, 1); // x velocity
+	x  = new Matrix(n, 1); // x position
 
 	y2 = new Matrix(n, 1);
 	y1 = new Matrix(n, 1);
 	y  = new Matrix(n, 1);
 
+	// force input vectors
 	fx = new Matrix(n, 1);
 	fy = new Matrix(n, 1);
 
+	// stiffness and damping matrices
 	lx = new SparseMatrix(n, n);
 	kx = new SparseMatrix(n, n);
 
@@ -226,6 +240,9 @@ function init() {
 
 function drawdot(x, y) {
 
+	// manually draw to canvas imageData for increased performance
+	// loops over each pixel in a 7x7 area around (x, y) and calculate the desired alpha
+
 	var ix = Math.floor(x);
 	var iy = Math.floor(y);
 
@@ -241,6 +258,7 @@ function drawdot(x, y) {
 		// calculate alpha based off distance from centre of dot
 		var alpha = ( 1.5 - 0.25*dm ) * 255;
 
+		// set alpha and add to alphaindexes to be cleared next frame
 		if(alpha > 0) {
 			var ind = (ox + oy*w)*4 + 3;
 			canvasData.data[ind] += alpha;
@@ -255,6 +273,8 @@ function drawdot(x, y) {
 }
 
 function mouseDown(e) {
+
+	// add force to points around click
 
 	if(e.button == 0 && e.target == canvas) {
 		for(var t=0; t<n; ++t) {
@@ -271,17 +291,7 @@ function mouseDown(e) {
 	}
 }
 
-function resize() {
-
-    w = parseInt(Math.max(document.documentElement.clientWidth, window.innerWidth)); // get screen width of canvas in px
-
-    // set canvas width to its screen width
-    canvas.width  = w;
-    canvas.height = w;
-}
-
 window.addEventListener('mousedown', mouseDown);
-//window.addEventListener('resize', resize);
 
 function step() {
 
@@ -289,7 +299,7 @@ function step() {
 	fx = mul(fx, 0.7);
 	fy = mul(fy, 0.7);
 
-	// verlet integration
+	// apply equation of motion by verlet integration
 	var x2s = mul( add3(fx, sparsemul(lx, x1), sparsemul(kx, x)), -0.1 );
 	var x1h = add(x1, mul(x2s, 0.5));
 	x  = add(x, x1h);
@@ -314,44 +324,48 @@ function draw() {
 
 function animate() {
 
+	// clear screen
 	for(const u of alphaindexes) {
 		canvasData.data[u] = 0;
 	}
 
 	alphaindexes = [];
 
+	// 4 physics steps then draw to screen
 	step();
 	step();
 	step();
 	step();
-	draw();
 
+	draw();
 	ctx.putImageData(canvasData, 0, 0);
 	
 	requestAnimationFrame(animate);
 }
 
+// get canvas variables
 var canvas  = document.getElementById("canvas");
-var w       = canvas.width;//canvas.offsetWidth;
-var h       = canvas.height;//canvas.offsetHeight;
+var w       = canvas.width;
+var h       = canvas.height;
 var ctx     = canvas.getContext("2d");
 
 var canvasData = ctx.getImageData(0, 0, w, h);
 var alphaindexes = [];
-var d  = 12;
-var dt = 1;
+var d  = 12; // seperation between points
 
-// get number of rows and columns of elements 
-var nx = 40; //Math.floor(w / d);
-var ny = 40; //Math.floor(h / d);
+// set number of rows and columns of elements 
+var nx = 40;
+var ny = 40;
 var n  = nx * ny;
 
+// set stiffness, damping and click strength
 var l = 1;
 var k = 0.4;
 var strength = 20;
 
 var x2, x1, x, fx, lx, kx, y2, y1, y, fy, ly, ky;
 
+// set slider initial values
 stiffnessrange.value  = 1/0.08;
 dampingrange.value    = 1/0.08;
 seperationrange.value = d/0.3;
